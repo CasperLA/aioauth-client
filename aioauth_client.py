@@ -75,7 +75,7 @@ class HmacSha1Signature(Signature):
         key = self._escape(consumer_secret) + b"&"
         if oauth_token_secret:
             key += self._escape(oauth_token_secret)
-
+        print(key, signature)
         hashed = hmac.new(key, signature, sha1)
         return base64.b64encode(hashed.digest()).decode()
 
