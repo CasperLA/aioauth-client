@@ -215,9 +215,15 @@ class OAuth1Client(Client):
         oparams['oauth_signature'] = self.signature.sign(
             self.consumer_secret, method, url,
             oauth_token_secret=self.oauth_token_secret, **oparams)
+        oheaders = dict(oparams)
+        for param in params:
+            oheaders.pop(param)
+        oheaders = {'Authorization': 'OAuth {}'.format(", ".join(["{}=\"{}\"".format(k, v) for k, v in oheaders.items()]))}
+        oheaders.update(headers or {})
+
         self.logger.debug("%s %s", url, oparams)
         return asyncio.wait_for(
-            aiorequest(method, url, params=oparams, headers=headers, loop=loop, **aio_kwargs),
+            aiorequest(method, url, params=oparams, headers=oheaders, loop=loop, **aio_kwargs),
             timeout, loop=loop)
 
     @asyncio.coroutine
