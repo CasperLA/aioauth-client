@@ -216,8 +216,6 @@ class OAuth1Client(Client):
             self.consumer_secret, method, url,
             oauth_token_secret=self.oauth_token_secret, **oparams)
         oheaders = dict(oparams)
-        for param in params:
-            oheaders.pop(param)
         oheaders = {'Authorization': 'OAuth {}'.format(", ".join(["{}=\"{}\"".format(k, v) for k, v in oheaders.items()]))}
         oheaders.update(headers or {})
 
